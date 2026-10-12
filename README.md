@@ -1,8 +1,11 @@
 # Email A/B Test Analysis — MineThatData Hillstrom (2008)
 
-A pre-registered analysis of a three-arm randomized email experiment, covering design, validity checks, effect estimation with multiplicity control, variance reduction, a single subgroup test, and an A/A validation of the pipeline.
+A pre-registered analysis of a three-arm randomized email experiment, in two stages:
 
-**Bottom line:** both emails increased visits, conversions and spend versus no email, and all 6 pre-registered tests stay significant after Holm correction. The **Men's email** performs best, adding **$7,700 per 10,000 emails** (95% CI $4,900–$10,600) over two weeks.
+1. **Did the emails work?** Design, validity checks, effect estimation with multiplicity control, variance reduction, a single subgroup test, and an A/A validation of the pipeline.
+2. **Who should get which email, and is targeting worth it?** Heterogeneous effects (segments and a T-learner), a cost-aware targeting decision evaluated out of sample, and all aggregation done in SQL (DuckDB).
+
+**Bottom line:** both emails increased visits, conversions and spend versus no email, and all 6 pre-registered tests stay significant after Holm correction. The **Men's email** performs best, adding **$7,700 per 10,000 emails** (95% CI $4,900–$10,600) over two weeks. With a cost per email and a margin per conversion, **sending the Men's email to everyone beats every targeted policy we could learn**. Targeting by recency and spend loses $305 per 10,000 customers out of sample (95% CI −$597 to −$22), even though it appears to gain $80 when learned and evaluated on the same data.
 
 ![Lift vs control](figures/lifts.png)
 
@@ -19,12 +22,15 @@ The CSV is in `data/hillstrom.csv`, downloaded from the [original URL](http://ww
 ```
 docs/01_analysis_plan.md        pre-registered plan, written before outcomes were read
 docs/02_recommendation_memo.md  one-page memo for a non-technical marketing lead
-run_analysis.py                 the full pipeline (≈15 s)
+docs/03_stage2_plan.md          stage 2 plan (segments, economics, decision rule), written before segment results
+run_analysis.py                 stage 1 pipeline (≈15 s)
+run_hte.py                      stage 2: runs sql/*.sql in DuckDB, then T-learner + policy evaluation (≈35 s)
+sql/                            all stage 2 aggregation: customers, arm/segment stats, lifts + SEs, CV cells
 src/stats.py                    tests, bootstrap, SMD, HC2 regression, Holm, Wilson CI
-results/                        CSV tables, summary.json, run_log.txt
-figures/lifts.png
+results/                        stage 1 tables; results/hte/ holds stage 2 tables (sql_*.csv = raw SQL output)
+figures/lifts.png, figures/segment_lifts.png
 ```
-Reproduce with `pip install -r requirements.txt && python run_analysis.py`.
+Reproduce with `pip install -r requirements.txt && python run_analysis.py && python run_hte.py`.
 
 ## Methods
 | Step | Method |
@@ -86,6 +92,70 @@ Women's-only buyers make up 44.8% of the Mens + control sample (n = 19,087).
 
 The Men's email clearly works on women's-only buyers. There is a hint of a smaller effect in this group, but it is not significant, and the CI rules out anything more than a modest attenuation. This finding is hypothesis-generating: it was the only subgroup examined, and it covered visits only.
 
+## Stage 2: who to target, and is it worth it?
+Stage 2 is exploratory and was **not** in the original pre-registration. Its segments, tests, cost assumptions and decision rule were fixed in [docs/03_stage2_plan.md](docs/03_stage2_plan.md) before any segment-level result was computed. One post hoc query is labelled as such below.
+
+### SQL for aggregation, Python for modeling
+Every segment rate, mean, variance, lift and SE comes from DuckDB SQL in [sql/](sql/):
+
+| File | Purpose |
+|---|---|
+| `00_customers.sql` | Builds the clean customer table: arm labels, recency and spend buckets, a fixed typo, and a hash-based CV fold |
+| `01_arm_summary.sql` | Arm-level counts, rates, revenue and average order value |
+| `02_segment_stats.sql` | Rates, means and variances for every (dimension, level, arm), via `UNPIVOT` |
+| `03_segment_lift.sql` | Lift, unpooled SE and 95% CI per segment and metric (a self-join to control) |
+| `04_policy_cells.sql` | Fold × cell × arm sufficient statistics used to learn the segment policy |
+| `05_purchase_category.sql` | **Post hoc** lift by past purchase category |
+
+Python only does the modeling and inference: Cochran's Q, Holm, the T-learner, policy learning and the bootstrap. As a cross-check, the SQL arm-level lifts and SEs match the stage 1 pandas results to 1e-10.
+
+### Who do the emails work for?
+![Effect by segment](figures/segment_lifts.png)
+
+- **Segments (recency, past spend, channel):** both emails lift visits and conversions in every segment. The Men's email beats the Women's email everywhere. None of the 18 heterogeneity tests (Cochran's Q) is significant even before correction (smallest p = 0.07, Mens visit by past spend), and none survives Holm. The Men's email *looks* stronger for $350+ customers (visit +9.0 pp vs. +6.9 pp for <$100), but the data can't separate that from noise.
+- **T-learner** (gradient boosting per arm, 5-fold cross-fitted, all covariates). I checked calibration by comparing observed lift across quintiles of held-out predicted uplift:
+
+| Model | Top − bottom quintile, observed lift [95% CI] | Spearman (pred vs. obs) |
+|---|---|---|
+| Mens, visit | −0.8 pp [−3.0, +1.4] | −0.1 |
+| Mens, conversion | −0.28 pp [−0.87, +0.30] | −0.1 |
+| **Womens, visit** | **+4.8 pp [+2.7, +6.9]** | **0.8** |
+| **Womens, conversion** | **+0.73 pp [+0.23, +1.24]** | **0.7** |
+
+  The model finds no usable heterogeneity for the Men's email, but it does find a real pattern for the Women's email.
+- **What the T-learner found (post hoc, `05_purchase_category.sql`).** Past purchase category drives the pattern, and it wasn't one of the pre-specified dimensions:
+
+| Past purchases | Mens email: visit lift | Womens email: visit lift |
+|---|---|---|
+| Women's only | +7.1 pp [6.1, 8.0] | +7.4 pp [6.4, 8.4] |
+| Men's only | +6.9 pp [6.0, 7.9] | **+1.1 pp [0.2, 2.0]** |
+| Both | +13.4 pp [10.9, 16.0] | +7.1 pp [4.7, 9.6] |
+
+  The Women's email works only on people who already buy women's products. The Men's email works on everyone, and where the Women's email works it does no better than the Men's. So the one real source of heterogeneity can't be turned into a targeting gain.
+
+### The decision, with costs
+**Assumptions** (the dataset has no cost or margin data):
+- Margin **M = $35 per conversion**, about 30% of the $116 average order.
+- Fully loaded cost **c = $0.10 per email**, covering sending plus unsubscribe and fatigue risk.
+- Net value = M × conversions − c × emails. Break-even conversion lift is c / M = 0.29 pp.
+
+**Evaluation:** each policy's value is estimated out of sample with the stratified (Hájek) estimator on the customers whose randomized arm matches the policy. CIs come from a 2,000-draw Poisson bootstrap with policy assignments held fixed.
+
+| Policy (base case) | Net value per 10k customers [95% CI] | Gain vs. Mens-to-all [95% CI] | Share emailed |
+|---|---|---|---|
+| Email nobody | $2,004 [1,671, 2,400] | — | 0% |
+| **Mens email to all** | **$3,386 [2,882, 3,938]** | — | 100% |
+| Womens email to all | $2,093 [1,666, 2,523] | — | 100% |
+| Segment policy (recency × spend, 12 cells), cross-fitted | $3,080 [2,593, 3,604] | **−$305 [−597, −22]** | 89% |
+| T-learner policy, cross-fitted | $2,895 [2,431, 3,382] | **−$491 [−866, −126]** | 90% |
+| *Segment policy, in-sample (optimistic reference)* | *$3,466* | *+$80 [−193, +340]* | 92% |
+
+**Decision (pre-specified rule): no targeted policy beat the best blanket policy, so send the Men's email to everyone.** It earns $1,382 per 10,000 customers more than sending nothing.
+
+- **In-sample vs. out-of-sample:** learned and scored on the same data, the segment policy appears to gain $80. Scored on held-out folds, it loses $305. The cells are too thin: there are only 10–125 conversions per cell across all three arms. The chosen arm differs between training folds in 4 of the 12 cells, so the policy partly fits noise, withholding email from good customers or sending them the weaker creative.
+- **Sensitivity** across margins of $20–50 and costs of $0.01–0.30 (`results/hte/policy_sensitivity.csv`): no targeted policy beats the best blanket policy in any of the 15 scenarios. The cost decides only *whether* to email. At M = $35, Mens-to-all pays off up to about **$0.24 per email** (0.68 pp × $35). Above that, sending nothing wins.
+- **What targeting would need to work:** more conversions per cell (bigger tests or longer windows), or a covariate with strong heterogeneity in the *best* arm's effect. Here the Men's email effect is flat across every dimension examined.
+
 ## Limitations
 - **2008 data.** Email engagement, deliverability and inbox filtering are very different today. The effect sizes are unlikely to transfer directly.
 - **Two-week window.** The data can't separate new demand from purchases pulled forward in time, and they don't capture longer-term effects such as unsubscribes, fatigue or list decay.
@@ -93,4 +163,7 @@ The Men's email clearly works on women's-only buyers. There is a hint of a small
 - **Single send, single creative per arm.** Effects belong to these specific emails, not to "men's" or "women's" email in general.
 - **Spend relies on rare events.** Only about 0.9% of customers bought anything, so spend CIs are wide (about ±37% of the Mens point estimate).
 - **One subgroup, one metric.** The subgroup result is hypothesis-generating. No other cuts were examined, and none should be read into these results.
+- **Stage 2 economics are assumptions.** The margin and cost per email are placeholders. Policy values scale with them, but the ranking holds across the sensitivity grid.
+- **Policy CIs ignore learning variability.** The bootstrap holds the cross-fitted assignments fixed, so it captures evaluation noise but not the variability of re-learning the policy.
+- **Post hoc finding.** The purchase-category result was found by looking at what the T-learner learned. It should be confirmed in a new test before anyone acts on it.
 - **Holm across all 6 tests is conservative** relative to a primary-only family. Since every test passes, the choice doesn't change any conclusion.

@@ -1,0 +1,767 @@
+{
+  "assumptions": {
+    "margin_per_conversion": 35.0,
+    "cost_per_email": 0.1,
+    "break_even_conv_lift": 0.002857142857142857
+  },
+  "heterogeneity": [
+    {
+      "dimension": "channel",
+      "arm": "mens",
+      "metric": "conversion",
+      "k": 3,
+      "Q": 2.3225560079087852,
+      "p_value": 0.3130858002023313,
+      "min_lift": 0.005461730292865705,
+      "max_lift": 0.010166979815243827,
+      "p_holm": 1.0
+    },
+    {
+      "dimension": "channel",
+      "arm": "mens",
+      "metric": "spend",
+      "k": 3,
+      "Q": 2.2164131579730517,
+      "p_value": 0.3301505293480878,
+      "min_lift": 0.5640743919691334,
+      "max_lift": 1.2091294052619082,
+      "p_holm": 1.0
+    },
+    {
+      "dimension": "channel",
+      "arm": "mens",
+      "metric": "visit",
+      "k": 3,
+      "Q": 0.44909186233140574,
+      "p_value": 0.7988788824188979,
+      "min_lift": 0.07556315210258555,
+      "max_lift": 0.08293672314062261,
+      "p_holm": 1.0
+    },
+    {
+      "dimension": "channel",
+      "arm": "womens",
+      "metric": "conversion",
+      "k": 3,
+      "Q": 3.388250245652126,
+      "p_value": 0.18375992608719136,
+      "min_lift": 0.0017261667942389536,
+      "max_lift": 0.0070517614226959175,
+      "p_holm": 1.0
+    },
+    {
+      "dimension": "channel",
+      "arm": "womens",
+      "metric": "spend",
+      "k": 3,
+      "Q": 3.584774354181318,
+      "p_value": 0.16656208151746027,
+      "min_lift": 0.23247350450950865,
+      "max_lift": 1.1575358651270649,
+      "p_holm": 1.0
+    },
+    {
+      "dimension": "channel",
+      "arm": "womens",
+      "metric": "visit",
+      "k": 3,
+      "Q": 0.05993237622145227,
+      "p_value": 0.9704783467001691,
+      "min_lift": 0.044629773745575654,
+      "max_lift": 0.04709997539010549,
+      "p_holm": 1.0
+    },
+    {
+      "dimension": "history_tier",
+      "arm": "mens",
+      "metric": "conversion",
+      "k": 3,
+      "Q": 3.7437901198449017,
+      "p_value": 0.15383186481425146,
+      "min_lift": 0.004988239833912657,
+      "max_lift": 0.010225883931826635,
+      "p_holm": 1.0
+    },
+    {
+      "dimension": "history_tier",
+      "arm": "mens",
+      "metric": "spend",
+      "k": 3,
+      "Q": 4.227051964559799,
+      "p_value": 0.12081123627568566,
+      "min_lift": 0.538283010988945,
+      "max_lift": 1.3990607889629139,
+      "p_holm": 1.0
+    },
+    {
+      "dimension": "history_tier",
+      "arm": "mens",
+      "metric": "visit",
+      "k": 3,
+      "Q": 5.296258537031578,
+      "p_value": 0.07078350621300077,
+      "min_lift": 0.06855191712613816,
+      "max_lift": 0.09009947212480882,
+      "p_holm": 1.0
+    },
+    {
+      "dimension": "history_tier",
+      "arm": "womens",
+      "metric": "conversion",
+      "k": 3,
+      "Q": 2.2000417049418597,
+      "p_value": 0.33286414258585323,
+      "min_lift": 0.0016875916673259614,
+      "max_lift": 0.00461972910223782,
+      "p_holm": 1.0
+    },
+    {
+      "dimension": "history_tier",
+      "arm": "womens",
+      "metric": "spend",
+      "k": 3,
+      "Q": 4.76412261829136,
+      "p_value": 0.092359998646941,
+      "min_lift": 0.09911277971847088,
+      "max_lift": 0.7000739959249425,
+      "p_holm": 1.0
+    },
+    {
+      "dimension": "history_tier",
+      "arm": "womens",
+      "metric": "visit",
+      "k": 3,
+      "Q": 2.0651454743699,
+      "p_value": 0.3560896559841811,
+      "min_lift": 0.039944360595677866,
+      "max_lift": 0.05217123600270443,
+      "p_holm": 1.0
+    },
+    {
+      "dimension": "recency_bucket",
+      "arm": "mens",
+      "metric": "conversion",
+      "k": 4,
+      "Q": 1.4089532305627592,
+      "p_value": 0.7034373926946751,
+      "min_lift": 0.005030460878328993,
+      "max_lift": 0.007900480967920703,
+      "p_holm": 1.0
+    },
+    {
+      "dimension": "recency_bucket",
+      "arm": "mens",
+      "metric": "spend",
+      "k": 4,
+      "Q": 2.292977188193967,
+      "p_value": 0.5138676262246706,
+      "min_lift": 0.48838743501902304,
+      "max_lift": 1.0475980624908665,
+      "p_holm": 1.0
+    },
+    {
+      "dimension": "recency_bucket",
+      "arm": "mens",
+      "metric": "visit",
+      "k": 4,
+      "Q": 3.479136550916438,
+      "p_value": 0.3234781383928654,
+      "min_lift": 0.07037142823939738,
+      "max_lift": 0.08498165996578994,
+      "p_holm": 1.0
+    },
+    {
+      "dimension": "recency_bucket",
+      "arm": "womens",
+      "metric": "conversion",
+      "k": 4,
+      "Q": 0.6170108282604292,
+      "p_value": 0.8925273291927219,
+      "min_lift": 0.0025396421227964865,
+      "max_lift": 0.004125547706483731,
+      "p_holm": 1.0
+    },
+    {
+      "dimension": "recency_bucket",
+      "arm": "womens",
+      "metric": "spend",
+      "k": 4,
+      "Q": 1.0010734505460446,
+      "p_value": 0.8009922133197673,
+      "min_lift": 0.29948940895002074,
+      "max_lift": 0.6654827359516465,
+      "p_holm": 1.0
+    },
+    {
+      "dimension": "recency_bucket",
+      "arm": "womens",
+      "metric": "visit",
+      "k": 4,
+      "Q": 2.372264395100424,
+      "p_value": 0.49881847821132197,
+      "min_lift": 0.04047438201673807,
+      "max_lift": 0.05379276582535783,
+      "p_holm": 1.0
+    }
+  ],
+  "tlearner_top_vs_bottom": [
+    {
+      "outcome": "visit",
+      "arm": "mens",
+      "top_minus_bottom": -0.00799122517747572,
+      "ci_low": -0.030234032009091714,
+      "ci_high": 0.014251581654140276,
+      "p_value": 0.48132455803246144,
+      "spearman_pred_vs_obs": -0.09999999999999999
+    },
+    {
+      "outcome": "visit",
+      "arm": "womens",
+      "top_minus_bottom": 0.048258979766931845,
+      "ci_low": 0.027422867861267675,
+      "ci_high": 0.06909509167259602,
+      "p_value": 5.6361215872721786e-06,
+      "spearman_pred_vs_obs": 0.7999999999999999
+    },
+    {
+      "outcome": "conversion",
+      "arm": "mens",
+      "top_minus_bottom": -0.002845963522994572,
+      "ci_low": -0.008698176775300801,
+      "ci_high": 0.003006249729311657,
+      "p_value": 0.34050962246728167,
+      "spearman_pred_vs_obs": -0.09999999999999999
+    },
+    {
+      "outcome": "conversion",
+      "arm": "womens",
+      "top_minus_bottom": 0.007316126091101959,
+      "ci_low": 0.0022703948770979717,
+      "ci_high": 0.012361857305105948,
+      "p_value": 0.0044841552618678495,
+      "spearman_pred_vs_obs": 0.7
+    }
+  ],
+  "posthoc_purchase_category": [
+    {
+      "past_category": "both",
+      "arm": "mens",
+      "n_treat": 2181,
+      "ctrl_visit": 0.18054909260120985,
+      "treat_visit": 0.3149931224209078,
+      "visit_lift": 0.13444402981969797,
+      "visit_se": 0.01295296504519346,
+      "conv_lift": 0.014994125201169455,
+      "conv_se": 0.003893797863329508,
+      "visit_ci": "[0.1091, 0.1598]",
+      "conv_ci": "[0.0074, 0.0226]"
+    },
+    {
+      "past_category": "mens only",
+      "arm": "mens",
+      "n_treat": 9558,
+      "ctrl_visit": 0.09981323926125753,
+      "treat_visit": 0.16896840343168026,
+      "visit_lift": 0.06915516417042274,
+      "visit_se": 0.004900376378223945,
+      "conv_lift": 0.006009617628761718,
+      "conv_se": 0.0013257658215198949,
+      "visit_ci": "[0.0596, 0.0788]",
+      "conv_ci": "[0.0034, 0.0086]"
+    },
+    {
+      "past_category": "womens only",
+      "arm": "mens",
+      "n_treat": 9568,
+      "ctrl_visit": 0.09580838323353294,
+      "treat_visit": 0.16638795986622074,
+      "visit_lift": 0.0705795766326878,
+      "visit_se": 0.004857695637892811,
+      "conv_lift": 0.005721965679624732,
+      "conv_se": 0.0012890587013849987,
+      "visit_ci": "[0.0611, 0.0801]",
+      "conv_ci": "[0.0032, 0.0082]"
+    },
+    {
+      "past_category": "both",
+      "arm": "womens",
+      "n_treat": 2118,
+      "ctrl_visit": 0.18054909260120985,
+      "treat_visit": 0.2516525023607177,
+      "visit_lift": 0.07110340975950782,
+      "visit_se": 0.012560343427722411,
+      "conv_lift": 0.005329795222847792,
+      "conv_se": 0.0033316281492257356,
+      "visit_ci": "[0.0465, 0.0957]",
+      "conv_ci": "[-0.0012, 0.0119]"
+    },
+    {
+      "past_category": "mens only",
+      "arm": "womens",
+      "n_treat": 9622,
+      "ctrl_visit": 0.09981323926125753,
+      "treat_visit": 0.11089170650592392,
+      "visit_lift": 0.011078467244666393,
+      "visit_se": 0.004423723999340813,
+      "conv_lift": 0.0006327151381356165,
+      "conv_se": 0.0010958022683162138,
+      "visit_ci": "[0.0024, 0.0197]",
+      "conv_ci": "[-0.0015, 0.0028]"
+    },
+    {
+      "past_category": "womens only",
+      "arm": "womens",
+      "n_treat": 9647,
+      "ctrl_visit": 0.09580838323353294,
+      "treat_visit": 0.1697937182543796,
+      "visit_lift": 0.07398533502084667,
+      "visit_se": 0.004869583834271854,
+      "conv_lift": 0.005114658158926701,
+      "conv_se": 0.001261288117236602,
+      "visit_ci": "[0.0644, 0.0835]",
+      "conv_ci": "[0.0026, 0.0076]"
+    }
+  ],
+  "policy_base": [
+    {
+      "policy": "none",
+      "margin": 35.0,
+      "cost": 0.1,
+      "value_per_10k": 2004.1302919365437,
+      "ci_low": 1671.1351946688824,
+      "ci_high": 2399.6232239689934,
+      "share_mens": 0.0,
+      "share_womens": 0.0,
+      "share_none": 1.0,
+      "gain_vs": NaN,
+      "gain_per_10k": NaN,
+      "gain_ci_low": NaN,
+      "gain_ci_high": NaN
+    },
+    {
+      "policy": "all_mens",
+      "margin": 35.0,
+      "cost": 0.1,
+      "value_per_10k": 3385.882573802037,
+      "ci_low": 2882.161685645657,
+      "ci_high": 3938.4778071924,
+      "share_mens": 1.0,
+      "share_womens": 0.0,
+      "share_none": 0.0,
+      "gain_vs": NaN,
+      "gain_per_10k": NaN,
+      "gain_ci_low": NaN,
+      "gain_ci_high": NaN
+    },
+    {
+      "policy": "all_womens",
+      "margin": 35.0,
+      "cost": 0.1,
+      "value_per_10k": 2093.000420816384,
+      "ci_low": 1665.8838135850153,
+      "ci_high": 2522.740840136547,
+      "share_mens": 0.0,
+      "share_womens": 1.0,
+      "share_none": 0.0,
+      "gain_vs": NaN,
+      "gain_per_10k": NaN,
+      "gain_ci_low": NaN,
+      "gain_ci_high": NaN
+    },
+    {
+      "policy": "segment_cv",
+      "margin": 35.0,
+      "cost": 0.1,
+      "value_per_10k": 3080.438380005106,
+      "ci_low": 2593.409756275615,
+      "ci_high": 3604.1834316770187,
+      "share_mens": 0.797078125,
+      "share_womens": 0.09159375,
+      "share_none": 0.111328125,
+      "gain_vs": "all_mens",
+      "gain_per_10k": -305.444193796931,
+      "gain_ci_low": -596.8760762698145,
+      "gain_ci_high": -22.332198046976043
+    },
+    {
+      "policy": "tlearner_cv",
+      "margin": 35.0,
+      "cost": 0.1,
+      "value_per_10k": 2895.058499487599,
+      "ci_low": 2430.549707663011,
+      "ci_high": 3382.3015182173317,
+      "share_mens": 0.70090625,
+      "share_womens": 0.196484375,
+      "share_none": 0.102609375,
+      "gain_vs": "all_mens",
+      "gain_per_10k": -490.8240743144382,
+      "gain_ci_low": -866.2716438463826,
+      "gain_ci_high": -126.00182817998672
+    },
+    {
+      "policy": "segment_insample",
+      "margin": 35.0,
+      "cost": 0.1,
+      "value_per_10k": 3465.569437725479,
+      "ci_low": 2978.5850257238,
+      "ci_high": 4000.9581204059423,
+      "share_mens": 0.82625,
+      "share_womens": 0.0945,
+      "share_none": 0.07925,
+      "gain_vs": "all_mens",
+      "gain_per_10k": 79.68686392344215,
+      "gain_ci_low": -193.4087126241487,
+      "gain_ci_high": 340.15905694292053
+    }
+  ],
+  "best_blanket": "all_mens",
+  "decision": "BLANKET: all_mens",
+  "segment_policy_stability": 0.6666666666666666,
+  "sensitivity": [
+    {
+      "margin": 20.0,
+      "cost": 0.01,
+      "break_even_pp": 0.05,
+      "best_blanket": "all_mens",
+      "best_blanket_value": 2406.2186136011637,
+      "best_blanket_ci": [
+        2118.378106083233,
+        2721.9873183956574
+      ],
+      "segment_cv_gain": -36.36703296430205,
+      "segment_cv_gain_ci": [
+        -171.18024948393062,
+        99.89930968059414
+      ],
+      "segment_cv_share_emailed": 1.0,
+      "tlearner_cv_gain": -247.5391213018463,
+      "tlearner_cv_gain_ci": [
+        -446.58820787971695,
+        -53.72695309173244
+      ],
+      "tlearner_cv_share_emailed": 0.975640625
+    },
+    {
+      "margin": 20.0,
+      "cost": 0.05,
+      "break_even_pp": 0.25,
+      "best_blanket": "all_mens",
+      "best_blanket_value": 2006.218613601164,
+      "best_blanket_ci": [
+        1718.378106083233,
+        2321.9873183956574
+      ],
+      "segment_cv_gain": -158.0696369862866,
+      "segment_cv_gain_ci": [
+        -314.52922996128876,
+        -6.451782054720203
+      ],
+      "segment_cv_share_emailed": 0.915796875,
+      "tlearner_cv_gain": -311.1554773293665,
+      "tlearner_cv_gain_ci": [
+        -518.0981422050968,
+        -106.76163920891061
+      ],
+      "tlearner_cv_share_emailed": 0.91115625
+    },
+    {
+      "margin": 20.0,
+      "cost": 0.1,
+      "break_even_pp": 0.5,
+      "best_blanket": "all_mens",
+      "best_blanket_value": 1506.2186136011637,
+      "best_blanket_ci": [
+        1218.3781060832328,
+        1821.9873183956572
+      ],
+      "segment_cv_gain": -216.69593475461213,
+      "segment_cv_gain_ci": [
+        -441.58429895846973,
+        7.963855014377878
+      ],
+      "segment_cv_share_emailed": 0.70415625,
+      "tlearner_cv_gain": -286.3232116638113,
+      "tlearner_cv_gain_ci": [
+        -523.8449153067963,
+        -62.51634753089067
+      ],
+      "tlearner_cv_share_emailed": 0.7152968749999999
+    },
+    {
+      "margin": 20.0,
+      "cost": 0.2,
+      "break_even_pp": 1.0,
+      "best_blanket": "none",
+      "best_blanket_value": 1145.217309678025,
+      "best_blanket_ci": [
+        954.9343969536473,
+        1371.2132708394245
+      ],
+      "segment_cv_gain": -112.24337604300611,
+      "segment_cv_gain_ci": [
+        -294.18831777681015,
+        59.75108512610276
+      ],
+      "segment_cv_share_emailed": 0.17425000000000002,
+      "tlearner_cv_gain": -200.86887575085976,
+      "tlearner_cv_gain_ci": [
+        -375.3080315450611,
+        -38.29713536896391
+      ],
+      "tlearner_cv_share_emailed": 0.22614062499999998
+    },
+    {
+      "margin": 20.0,
+      "cost": 0.3,
+      "break_even_pp": 1.5,
+      "best_blanket": "none",
+      "best_blanket_value": 1145.217309678025,
+      "best_blanket_ci": [
+        954.9343969536473,
+        1371.2132708394245
+      ],
+      "segment_cv_gain": -98.96006962985857,
+      "segment_cv_gain_ci": [
+        -174.82228236019319,
+        -24.319602297794525
+      ],
+      "segment_cv_share_emailed": 0.029359374999999965,
+      "tlearner_cv_gain": -109.87630525626734,
+      "tlearner_cv_gain_ci": [
+        -204.31224144077893,
+        -12.534205783262152
+      ],
+      "tlearner_cv_share_emailed": 0.04934375000000002
+    },
+    {
+      "margin": 35.0,
+      "cost": 0.01,
+      "break_even_pp": 0.02857142857142857,
+      "best_blanket": "all_mens",
+      "best_blanket_value": 4285.882573802037,
+      "best_blanket_ci": [
+        3782.1616856456576,
+        4838.4778071924
+      ],
+      "segment_cv_gain": -63.64230768752866,
+      "segment_cv_gain_ci": [
+        -299.5654365968784,
+        174.82379194103976
+      ],
+      "segment_cv_share_emailed": 1.0,
+      "tlearner_cv_gain": -386.05329557410585,
+      "tlearner_cv_gain_ci": [
+        -723.3400930889776,
+        -55.64109820830006
+      ],
+      "tlearner_cv_share_emailed": 0.9785625
+    },
+    {
+      "margin": 35.0,
+      "cost": 0.05,
+      "break_even_pp": 0.14285714285714285,
+      "best_blanket": "all_mens",
+      "best_blanket_value": 3885.882573802037,
+      "best_blanket_ci": [
+        3382.1616856456576,
+        4438.4778071924
+      ],
+      "segment_cv_gain": -149.8641774406617,
+      "segment_cv_gain_ci": [
+        -382.4366613471296,
+        80.52001492791686
+      ],
+      "segment_cv_share_emailed": 0.953125,
+      "tlearner_cv_gain": -510.8285996161177,
+      "tlearner_cv_gain_ci": [
+        -859.4904325642622,
+        -166.3391346180822
+      ],
+      "tlearner_cv_share_emailed": 0.952859375
+    },
+    {
+      "margin": 35.0,
+      "cost": 0.1,
+      "break_even_pp": 0.2857142857142857,
+      "best_blanket": "all_mens",
+      "best_blanket_value": 3385.882573802037,
+      "best_blanket_ci": [
+        2882.161685645657,
+        3938.4778071924
+      ],
+      "segment_cv_gain": -305.444193796931,
+      "segment_cv_gain_ci": [
+        -596.8760762698145,
+        -22.332198046976043
+      ],
+      "segment_cv_share_emailed": 0.888671875,
+      "tlearner_cv_gain": -490.8240743144382,
+      "tlearner_cv_gain_ci": [
+        -866.2716438463826,
+        -126.00182817998672
+      ],
+      "tlearner_cv_share_emailed": 0.897390625
+    },
+    {
+      "margin": 35.0,
+      "cost": 0.2,
+      "break_even_pp": 0.5714285714285714,
+      "best_blanket": "all_mens",
+      "best_blanket_value": 2385.882573802037,
+      "best_blanket_ci": [
+        1882.1616856456578,
+        2938.4778071924
+      ],
+      "segment_cv_gain": -366.80065201354637,
+      "segment_cv_gain_ci": [
+        -797.5736473200628,
+        52.55124451181772
+      ],
+      "segment_cv_share_emailed": 0.62990625,
+      "tlearner_cv_gain": -240.06207972463028,
+      "tlearner_cv_gain_ci": [
+        -703.2546858096872,
+        200.5969593284523
+      ],
+      "tlearner_cv_share_emailed": 0.633828125
+    },
+    {
+      "margin": 35.0,
+      "cost": 0.3,
+      "break_even_pp": 0.8571428571428571,
+      "best_blanket": "none",
+      "best_blanket_value": 2004.1302919365437,
+      "best_blanket_ci": [
+        1671.1351946688824,
+        2399.6232239689934
+      ],
+      "segment_cv_gain": -221.8756635699451,
+      "segment_cv_gain_ci": [
+        -610.9005224872899,
+        169.85804415696413
+      ],
+      "segment_cv_share_emailed": 0.34601562500000005,
+      "tlearner_cv_gain": -302.1830370777745,
+      "tlearner_cv_gain_ci": [
+        -655.6140740557115,
+        49.0620416179157
+      ],
+      "tlearner_cv_share_emailed": 0.32375
+    },
+    {
+      "margin": 50.0,
+      "cost": 0.01,
+      "break_even_pp": 0.02,
+      "best_blanket": "all_mens",
+      "best_blanket_value": 6165.54653400291,
+      "best_blanket_ci": [
+        5445.945265208082,
+        6954.968295989143
+      ],
+      "segment_cv_gain": -90.91758241075554,
+      "segment_cv_gain_ci": [
+        -427.9506237098254,
+        249.7482742014854
+      ],
+      "segment_cv_share_emailed": 1.0,
+      "tlearner_cv_gain": -553.7393269260815,
+      "tlearner_cv_gain_ci": [
+        -1035.9337927478352,
+        -81.60098294589572
+      ],
+      "tlearner_cv_share_emailed": 0.9794375
+    },
+    {
+      "margin": 50.0,
+      "cost": 0.05,
+      "break_even_pp": 0.1,
+      "best_blanket": "all_mens",
+      "best_blanket_value": 5765.5465340029095,
+      "best_blanket_ci": [
+        5045.945265208082,
+        6554.968295989143
+      ],
+      "segment_cv_gain": -186.17548144323703,
+      "segment_cv_gain_ci": [
+        -528.7445696181951,
+        140.59653524610275
+      ],
+      "segment_cv_share_emailed": 0.968546875,
+      "tlearner_cv_gain": -722.4079919183101,
+      "tlearner_cv_gain_ci": [
+        -1222.554797911444,
+        -222.3823287879505
+      ],
+      "tlearner_cv_share_emailed": 0.96565625
+    },
+    {
+      "margin": 50.0,
+      "cost": 0.1,
+      "break_even_pp": 0.2,
+      "best_blanket": "all_mens",
+      "best_blanket_value": 5265.54653400291,
+      "best_blanket_ci": [
+        4545.945265208082,
+        6054.968295989143
+      ],
+      "segment_cv_gain": -330.7273251927834,
+      "segment_cv_gain_ci": [
+        -697.2329649703363,
+        27.126654483940193
+      ],
+      "segment_cv_share_emailed": 0.92578125,
+      "tlearner_cv_gain": -736.0033219355716,
+      "tlearner_cv_gain_ci": [
+        -1250.9960250163126,
+        -236.86047751984714
+      ],
+      "tlearner_cv_share_emailed": 0.93465625
+    },
+    {
+      "margin": 50.0,
+      "cost": 0.2,
+      "break_even_pp": 0.4,
+      "best_blanket": "all_mens",
+      "best_blanket_value": 4265.54653400291,
+      "best_blanket_ci": [
+        3545.9452652080813,
+        5054.968295989144
+      ],
+      "segment_cv_gain": -562.7771422284821,
+      "segment_cv_gain_ci": [
+        -1113.728398435151,
+        -26.625782234885992
+      ],
+      "segment_cv_share_emailed": 0.756234375,
+      "tlearner_cv_gain": -854.673117564187,
+      "tlearner_cv_gain_ci": [
+        -1419.5166134173048,
+        -315.611388746945
+      ],
+      "tlearner_cv_share_emailed": 0.807015625
+    },
+    {
+      "margin": 50.0,
+      "cost": 0.3,
+      "break_even_pp": 0.6,
+      "best_blanket": "all_mens",
+      "best_blanket_value": 3265.5465340029104,
+      "best_blanket_ci": [
+        2545.9452652080818,
+        4054.968295989144
+      ],
+      "segment_cv_gain": -532.8681400272939,
+      "segment_cv_gain_ci": [
+        -1152.681815957599,
+        82.93753165017901
+      ],
+      "segment_cv_share_emailed": 0.594984375,
+      "tlearner_cv_gain": -216.10622261210077,
+      "tlearner_cv_gain_ci": [
+        -895.9497693306616,
+        432.42787604714994
+      ],
+      "tlearner_cv_share_emailed": 0.6034375000000001
+    }
+  ]
+}

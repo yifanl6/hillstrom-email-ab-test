@@ -1,0 +1,175 @@
+
+======================================================================
+0. DuckDB aggregation
+======================================================================
+00_customers.sql         -> customers (64000 rows)
+01_arm_summary.sql       -> arm_summary (3 rows)
+02_segment_stats.sql     -> segment_stats (33 rows)
+03_segment_lift.sql      -> segment_lift (66 rows)
+04_policy_cells.sql      -> policy_cells (180 rows)
+05_purchase_category.sql -> purchase_category (6 rows)
+             n  visits  conversions   revenue  avg_order_value
+arm                                                           
+control  21306    2262          122  13908.33       114.002705
+mens     21307    3894          267  30311.69       113.526929
+womens   21387    3238          189  23038.11       121.894762
+Cross-check: SQL lifts and SEs match stage 1 pandas results (rtol 1e-10).
+
+======================================================================
+1. Segment-level effects and heterogeneity (Cochran's Q, Holm over 18)
+======================================================================
+     dimension    arm     metric  k       Q  p_value  min_lift  max_lift  p_holm
+  history_tier   mens      visit  3   5.296  0.07078   0.06855    0.0901       1
+  history_tier womens      spend  3   4.764  0.09236   0.09911    0.7001       1
+  history_tier   mens      spend  3   4.227   0.1208    0.5383     1.399       1
+  history_tier   mens conversion  3   3.744   0.1538  0.004988   0.01023       1
+       channel womens      spend  3   3.585   0.1666    0.2325     1.158       1
+       channel womens conversion  3   3.388   0.1838  0.001726  0.007052       1
+       channel   mens conversion  3   2.323   0.3131  0.005462   0.01017       1
+recency_bucket   mens      visit  4   3.479   0.3235   0.07037   0.08498       1
+       channel   mens      spend  3   2.216   0.3302    0.5641     1.209       1
+  history_tier womens conversion  3     2.2   0.3329  0.001688   0.00462       1
+  history_tier womens      visit  3   2.065   0.3561   0.03994   0.05217       1
+recency_bucket womens      visit  4   2.372   0.4988   0.04047   0.05379       1
+recency_bucket   mens      spend  4   2.293   0.5139    0.4884     1.048       1
+recency_bucket   mens conversion  4   1.409   0.7034   0.00503    0.0079       1
+       channel   mens      visit  3  0.4491   0.7989   0.07556   0.08294       1
+recency_bucket womens      spend  4   1.001    0.801    0.2995    0.6655       1
+recency_bucket womens conversion  4   0.617   0.8925   0.00254  0.004126       1
+       channel womens      visit  3 0.05993   0.9705   0.04463    0.0471       1
+
+Visit and conversion lift by segment:
+    metric    arm      dimension        level  n_treat  ctrl_mean  treat_mean  abs_lift     ci_low  ci_high
+conversion   mens        channel Multichannel     2577   0.006907     0.01707   0.01017    0.00424  0.01609
+conversion   mens        channel        Phone     9240   0.005361     0.01082  0.005462   0.002884  0.00804
+conversion   mens        channel          Web     9490   0.005761     0.01296    0.0072   0.004456 0.009943
+conversion   mens   history_tier      1 <$100     7724   0.004204    0.009192  0.004988   0.002411 0.007565
+conversion   mens   history_tier   2 $100-350     8781   0.005405     0.01196  0.006552   0.003815  0.00929
+conversion   mens   history_tier      3 $350+     4802   0.008725     0.01895   0.01023    0.00556  0.01489
+conversion   mens recency_bucket     01-03 mo     7469   0.009008     0.01633  0.007326   0.003738  0.01091
+conversion   mens recency_bucket     04-06 mo     4673   0.005455     0.01049   0.00503   0.001438 0.008622
+conversion   mens recency_bucket     07-09 mo     4688   0.003405     0.01131    0.0079   0.004446  0.01135
+conversion   mens recency_bucket     10-12 mo     4477   0.002953    0.009605  0.006652   0.003376 0.009928
+conversion womens        channel Multichannel     2579   0.006907     0.01396  0.007052   0.001519  0.01258
+conversion womens        channel        Phone     9454   0.005361    0.007087  0.001726 -0.0005222 0.003975
+conversion womens        channel          Web     9354   0.005761    0.009194  0.003433  0.0009652   0.0059
+conversion womens   history_tier      1 <$100     7634   0.004204    0.007991  0.003787   0.001317 0.006257
+conversion womens   history_tier   2 $100-350     8882   0.005405    0.007093  0.001688 -0.0006301 0.004005
+conversion womens   history_tier      3 $350+     4871   0.008725     0.01334   0.00462  0.0004622 0.008777
+conversion womens recency_bucket     01-03 mo     7486   0.009008     0.01176  0.002747 -0.0005039 0.005999
+conversion womens recency_bucket     04-06 mo     4753   0.005455    0.007995   0.00254 -0.0007441 0.005823
+conversion womens recency_bucket     07-09 mo     4627   0.003405      0.0067  0.003295   0.000414 0.006176
+conversion womens recency_bucket     10-12 mo     4521   0.002953    0.007078  0.004126   0.001203 0.007048
+     visit   mens        channel Multichannel     2577     0.1285      0.2115   0.08294     0.0626   0.1033
+     visit   mens        channel        Phone     9240    0.08717      0.1628    0.0756    0.06615  0.08506
+     visit   mens        channel          Web     9490     0.1189      0.1944   0.07556    0.06525  0.08587
+     visit   mens   history_tier      1 <$100     7724    0.08487      0.1534   0.06855    0.05836  0.07874
+     visit   mens   history_tier   2 $100-350     8781     0.1071      0.1837    0.0766    0.06626  0.08694
+     visit   mens   history_tier      3 $350+     4802     0.1381      0.2282    0.0901    0.07474   0.1055
+     visit   mens recency_bucket     01-03 mo     7469     0.1378      0.2228   0.08498    0.07272  0.09725
+     visit   mens recency_bucket     04-06 mo     4673     0.1057      0.1813    0.0755    0.06143  0.08958
+     visit   mens recency_bucket     07-09 mo     4688    0.08193      0.1523   0.07037    0.05744  0.08331
+     visit   mens recency_bucket     10-12 mo     4477    0.07904      0.1494   0.07039    0.05726  0.08353
+     visit womens        channel Multichannel     2579     0.1285      0.1756    0.0471    0.02759  0.06661
+     visit womens        channel        Phone     9454    0.08717      0.1318   0.04463    0.03573  0.05353
+     visit womens        channel          Web     9354     0.1189      0.1645   0.04568    0.03571  0.05565
+     visit womens   history_tier      1 <$100     7634    0.08487      0.1316   0.04678    0.03695  0.05662
+     visit womens   history_tier   2 $100-350     8882     0.1071       0.147   0.03994    0.03017  0.04972
+     visit womens   history_tier      3 $350+     4871     0.1381      0.1903   0.05217    0.03746  0.06689
+     visit womens recency_bucket     01-03 mo     7486     0.1378      0.1818     0.044    0.03227  0.05573
+     visit womens recency_bucket     04-06 mo     4753     0.1057      0.1462   0.04047    0.02717  0.05378
+     visit womens recency_bucket     07-09 mo     4627    0.08193      0.1357   0.05379    0.04119   0.0664
+     visit womens recency_bucket     10-12 mo     4521    0.07904      0.1225    0.0435    0.03106  0.05595
+
+======================================================================
+2. T-learner (gradient boosting, 5-fold cross-fitted)
+======================================================================
+   outcome    arm  quintile  pred_uplift  obs_uplift     ci_low  ci_high
+     visit   mens         1      0.03992     0.09233    0.07767    0.107
+     visit   mens         2      0.05888     0.06355     0.0503   0.0768
+     visit   mens         3      0.07086     0.07706    0.06271   0.0914
+     visit   mens         4      0.08509     0.06509    0.05029  0.07989
+     visit   mens         5       0.1265     0.08434    0.06761   0.1011
+     visit womens         1    -0.008169      0.0191   0.004747  0.03345
+     visit womens         2      0.01986     0.01373    0.00103  0.02644
+     visit womens         3      0.04585     0.04328    0.02894  0.05762
+     visit womens         4      0.07123     0.08284    0.06873  0.09695
+     visit womens         5      0.09793     0.06736    0.05226  0.08246
+conversion   mens         1     0.001415    0.009352   0.005327  0.01338
+conversion   mens         2     0.004624    0.003167 -0.0004649 0.006799
+conversion   mens         3     0.006399    0.005762   0.001822 0.009703
+conversion   mens         4     0.008464    0.009186   0.004899  0.01347
+conversion   mens         5      0.01319    0.006506   0.002257  0.01075
+conversion womens         1    -0.002565  -0.0002995  -0.003998 0.003399
+conversion womens         2     0.001149    0.003762  0.0002134 0.007311
+conversion womens         3     0.002965    0.004416  0.0007768 0.008055
+conversion womens         4     0.004816   0.0007109  -0.002958  0.00438
+conversion womens         5     0.009056    0.007017   0.003584  0.01045
+
+Top vs bottom quintile of predicted uplift (held-out):
+   outcome    arm  top_minus_bottom    ci_low  ci_high   p_value  spearman_pred_vs_obs
+     visit   mens         -0.007991  -0.03023  0.01425    0.4813                  -0.1
+     visit womens           0.04826   0.02742   0.0691 5.636e-06                   0.8
+conversion   mens         -0.002846 -0.008698 0.003006    0.3405                  -0.1
+conversion womens          0.007316   0.00227  0.01236  0.004484                   0.7
+
+POST HOC - lift by past purchase category:
+   arm past_category  n_treat  ctrl_visit  treat_visit  visit_lift         visit_ci  conv_lift           conv_ci
+  mens          both     2181      0.1805       0.3150      0.1344 [0.1091, 0.1598]     0.0150  [0.0074, 0.0226]
+  mens     mens only     9558      0.0998       0.1690      0.0692 [0.0596, 0.0788]     0.0060  [0.0034, 0.0086]
+  mens   womens only     9568      0.0958       0.1664      0.0706 [0.0611, 0.0801]     0.0057  [0.0032, 0.0082]
+womens          both     2118      0.1805       0.2517      0.0711 [0.0465, 0.0957]     0.0053 [-0.0012, 0.0119]
+womens     mens only     9622      0.0998       0.1109      0.0111 [0.0024, 0.0197]     0.0006 [-0.0015, 0.0028]
+womens   womens only     9647      0.0958       0.1698      0.0740 [0.0644, 0.0835]     0.0051  [0.0026, 0.0076]
+
+======================================================================
+3. Cost-aware targeting policies
+======================================================================
+Base case: margin $35/conversion, cost $0.10/email (break-even conversion lift 0.29%)
+          policy  value_per_10k   ci_low  ci_high  share_mens  share_womens  share_none  gain_vs  gain_per_10k  gain_ci_low  gain_ci_high
+            none       2,004.13 1,671.14 2,399.62        0.00          0.00        1.00      NaN           NaN          NaN           NaN
+        all_mens       3,385.88 2,882.16 3,938.48        1.00          0.00        0.00      NaN           NaN          NaN           NaN
+      all_womens       2,093.00 1,665.88 2,522.74        0.00          1.00        0.00      NaN           NaN          NaN           NaN
+      segment_cv       3,080.44 2,593.41 3,604.18        0.80          0.09        0.11 all_mens       -305.44      -596.88        -22.33
+     tlearner_cv       2,895.06 2,430.55 3,382.30        0.70          0.20        0.10 all_mens       -490.82      -866.27       -126.00
+segment_insample       3,465.57 2,978.59 4,000.96        0.83          0.09        0.08 all_mens         79.69      -193.41        340.16
+
+Segment policy cells (learned on all data, base case):
+                       net_value_control  net_value_mens  net_value_womens   chosen     n  conversions
+01-03 mo | 1 <$100                 0.154           0.302             0.354   womens  6048           58
+01-03 mo | 2 $100-350              0.373           0.393             0.136     mens  8953           94
+01-03 mo | 3 $350+                 0.380           0.703             0.484     mens  7392          125
+04-06 mo | 1 <$100                 0.188           0.149             0.167  control  5072           34
+04-06 mo | 2 $100-350              0.107           0.277             0.165     mens  5901           42
+04-06 mo | 3 $350+                 0.344           0.442             0.228     mens  3219           37
+07-09 mo | 1 <$100                 0.090           0.175             0.048     mens  5735           28
+07-09 mo | 2 $100-350              0.139           0.330             0.131     mens  6019           46
+07-09 mo | 3 $350+                 0.139           0.512             0.359     mens  2260           26
+10-12 mo | 1 <$100                 0.161           0.246             0.141     mens  6115           44
+10-12 mo | 2 $100-350              0.037           0.228             0.167     mens  5670           34
+10-12 mo | 3 $350+                 0.128           0.223             0.099     mens  1616           10
+
+Cells whose chosen arm is identical across all 5 training folds: 67%
+
+Sensitivity (value per 10k customers; gains vs. best blanket policy):
+ margin  cost  break_even_pp best_blanket  best_blanket_value best_blanket_ci  segment_cv_gain segment_cv_gain_ci  segment_cv_share_emailed  tlearner_cv_gain tlearner_cv_gain_ci  tlearner_cv_share_emailed
+  20.00  0.01           0.05     all_mens            2,406.22  [2,118, 2,722]           -36.37        [-171, 100]                      1.00           -247.54         [-447, -54]                       0.98
+  20.00  0.05           0.25     all_mens            2,006.22  [1,718, 2,322]          -158.07         [-315, -6]                      0.92           -311.16        [-518, -107]                       0.91
+  20.00  0.10           0.50     all_mens            1,506.22  [1,218, 1,822]          -216.70          [-442, 8]                      0.70           -286.32         [-524, -63]                       0.72
+  20.00  0.20           1.00         none            1,145.22    [955, 1,371]          -112.24         [-294, 60]                      0.17           -200.87         [-375, -38]                       0.23
+  20.00  0.30           1.50         none            1,145.22    [955, 1,371]           -98.96        [-175, -24]                      0.03           -109.88         [-204, -13]                       0.05
+  35.00  0.01           0.03     all_mens            4,285.88  [3,782, 4,838]           -63.64        [-300, 175]                      1.00           -386.05         [-723, -56]                       0.98
+  35.00  0.05           0.14     all_mens            3,885.88  [3,382, 4,438]          -149.86         [-382, 81]                      0.95           -510.83        [-859, -166]                       0.95
+  35.00  0.10           0.29     all_mens            3,385.88  [2,882, 3,938]          -305.44        [-597, -22]                      0.89           -490.82        [-866, -126]                       0.90
+  35.00  0.20           0.57     all_mens            2,385.88  [1,882, 2,938]          -366.80         [-798, 53]                      0.63           -240.06         [-703, 201]                       0.63
+  35.00  0.30           0.86         none            2,004.13  [1,671, 2,400]          -221.88        [-611, 170]                      0.35           -302.18          [-656, 49]                       0.32
+  50.00  0.01           0.02     all_mens            6,165.55  [5,446, 6,955]           -90.92        [-428, 250]                      1.00           -553.74       [-1,036, -82]                       0.98
+  50.00  0.05           0.10     all_mens            5,765.55  [5,046, 6,555]          -186.18        [-529, 141]                      0.97           -722.41      [-1,223, -222]                       0.97
+  50.00  0.10           0.20     all_mens            5,265.55  [4,546, 6,055]          -330.73         [-697, 27]                      0.93           -736.00      [-1,251, -237]                       0.93
+  50.00  0.20           0.40     all_mens            4,265.55  [3,546, 5,055]          -562.78      [-1,114, -27]                      0.76           -854.67      [-1,420, -316]                       0.81
+  50.00  0.30           0.60     all_mens            3,265.55  [2,546, 4,055]          -532.87       [-1,153, 83]                      0.59           -216.11         [-896, 432]                       0.60
+
+Decision rule (gain CI > 0 at base case): BLANKET: all_mens
+
+Saved /Users/yifanli/mine that data/figures/segment_lifts.png
+Saved /Users/yifanli/mine that data/results/hte/summary.json

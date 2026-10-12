@@ -22,11 +22,22 @@ Without an email, 10,000 customers produce about 1,060 visits, 57 orders and $6,
 
 The Men's email earns about **$3,500 more per 10,000 sends** than the Women's email. That gap is real but less certain: it could be anywhere from about $300 to $6,600.
 
-## "Who should get it?"
-We checked one specific worry in advance: does a Men's email turn off customers who only buy women's products? It does not. Their visits rose by 7 percentage points, from 9.6% to 16.6%, about the same as for everyone else. This check looked at visits only, so treat it as reassuring, not as final.
+## "Who should get it?" Everyone. Targeting doesn't pay here.
+We tried to find customers worth skipping or worth sending the Women's email instead, using recency, past spend, channel and a machine-learning model. **None of the targeted plans beat simply sending the Men's email to everyone.** When tested on customers they hadn't been built from, the best targeted plans earned **$300–$500 less per 10,000 customers**.
+
+- The Men's email works about equally well for recent and lapsed, big and small, web and phone customers. There is no group where it clearly fails.
+- The Women's email works only for people who already buy women's products. Even for them, the Men's email does just as well.
+- It also works for customers who only buy women's products: their visits rose from 9.6% to 16.6%.
+
+## Is it worth the cost?
+We assumed **$35 profit per order** (about 30% of the $116 average order) and **$0.10 per email** (sending plus a charge for unsubscribe risk). Both are assumptions to replace with real figures.
+
+- Sending the Men's email to everyone earns about **$1,400 more profit per 10,000 customers** than sending nothing.
+- The email pays for itself as long as each send costs less than about **$0.24** all-in. Above that, it loses money.
+- Across profit-per-order assumptions of $20–$50 and email costs of $0.01–$0.30, targeting never beat the simpler plan.
 
 ## What this does *not* tell you
-- **Profit.** We have no data on the cost of sending emails or on product margins. Figures above are extra revenue, not extra profit. At these sizes, email costs are very unlikely to erase the gain.
+- **Real costs and margins.** The profit figures rest on the assumptions above. The revenue table uses no assumptions.
 - **Long-term effects.** We only saw two weeks. We don't know whether emails pull forward purchases that would have happened anyway, or whether repeated sends cause unsubscribes.
 - **Today's customers.** The test ran in 2008. Inbox habits have changed, so a quick confirmation test with a holdout group is advisable before a full rollout.
 
